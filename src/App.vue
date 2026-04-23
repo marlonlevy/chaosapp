@@ -12,6 +12,7 @@
 
     <v-main class="bg-grey-lighten-2">
       <!-- --  -->
+      <h1 class="text-center">Chaos App 1.1</h1>
       <router-view />
     </v-main>
   </v-app>
