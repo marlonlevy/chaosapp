@@ -11,12 +11,14 @@
   </v-container>
 </template>
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useResourceStore } from '@/stores/ResourceStore'
 import { storeToRefs } from 'pinia'
 
 const resourceStore = useResourceStore()
 const { getNodes } = storeToRefs(resourceStore)
+let intervalId = null
+
 const nodeHeaders = [
   { title: 'Name', value: 'name' },
   { title: 'Status', value: 'status' },
@@ -32,7 +34,16 @@ const nodeHeaders = [
 ]
 
 onMounted(async () => {
+  intervalId = setInterval(async () => {
+    await resourceStore.fetchNodes()
+  }, 30000)
   console.log('Home component mounted')
-  await resourceStore.fetchNodes()
+})
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+    console.log('Home component unmounted, interval cleared')
+  }
 })
 </script>
