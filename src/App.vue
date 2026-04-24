@@ -2,6 +2,27 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" temporary>
       <!--  -->
+      <v-list>
+        <v-list-item link :to="{ name: 'Home' }">
+          <v-list-item-icon>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link :to="{ name: 'Pods' }">
+          <v-list-item-icon>
+            <v-icon>mdi-pod</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Pods</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <!-- Add more navigation items here -->
     </v-navigation-drawer>
 
     <v-app-bar>
