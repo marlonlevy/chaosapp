@@ -37,6 +37,7 @@ onMounted(async () => {
   intervalId = setInterval(async () => {
     await resourceStore.fetchNodes()
   }, 30000)
+  await resourceStore.fetchNodes()
   console.log('Home component mounted')
 })
 
