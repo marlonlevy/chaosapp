@@ -3,22 +3,17 @@
     <v-navigation-drawer v-model="drawer" temporary>
       <!--  -->
       <v-list>
-        <v-list-item link :to="{ name: 'Home' }">
-          <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item
+          v-for="(navBarItem, idx) in navBarItems"
+          :key="idx"
+          link
+          :to="{ path: navBarItem.route }"
+        >
+          <template v-slot:prepend>
+            <v-icon>{{ navBarItem.icon }}</v-icon>
+          </template>
 
-        <v-list-item link :to="{ name: 'Pods' }">
-          <v-list-item-icon>
-            <v-icon>mdi-pod</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Pods</v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>{{ navBarItem.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
 
@@ -43,6 +38,11 @@
 import { ref } from 'vue'
 
 const drawer = ref(null)
+const navBarItems = [
+  { title: 'Home', icon: 'mdi-home', route: '/' },
+  { title: 'Nodes', icon: 'mdi-server', route: '/nodes' },
+  { title: 'Pods', icon: 'mdi-memory', route: '/pods' },
+]
 </script>
 
 <style scoped></style>
