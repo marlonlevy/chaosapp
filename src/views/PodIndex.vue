@@ -14,27 +14,45 @@
           </template>
           <template #item.actions="{ item }">
             <v-btn @click="fetchPodLogs(item.name)"> Logs </v-btn>
-            <v-btn @click="() => console.log('View details for', item.name)"> Describe </v-btn>
+            <v-btn @click="describePod(item.name)"> Describe </v-btn>
           </template>
         </v-data-table>
       </v-col>
     </v-row>
     {{ getPods.length }} pods available
   </v-container>
-  <v-dialog v-model="showLogsDiaog" max-width="600px" max-height="600px" persistent scrollable>
+  <v-dialog v-model="showLogsDialog" max-width="800px" max-height="600px" persistent scrollable>
     <v-card>
       <v-card-title>Logs for : {{ nameOfSlectedPod }}</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <v-row compact class="fill-height ma-0">
           <v-col cols="12">
-            <p class="text-subtitle-1 mt-2">{{ podLogs.logs }}</p>
+            <pre class="text-subtitle-1 mt-2 text-green">{{ podLogs.logs }}</pre>
           </v-col>
         </v-row>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn @click="() => (showLogsDiaog = false)">Close</v-btn>
+        <v-btn @click="() => (showLogsDialog = false)">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog persistent v-model="showDescribeDialog" max-width="800px" max-height="600px" scrollable>
+    <v-card>
+      <v-card-title>Describe : {{ nameOfSlectedPod }}</v-card-title>
+      <v-divider></v-divider>
+      <v-card-text>
+        <v-row compact class="fill-height ma-0">
+          <v-col cols="12">
+            <pre class="text-subtitle-1 mt-2 text-green">{{ describeData }}</pre>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-btn @click="() => (showDescribeDialog = false)">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -44,11 +62,14 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { useResourceStore } from '@/stores/ResourceStore'
 import { storeToRefs } from 'pinia'
 
-const showLogsDiaog = ref(false)
+const showLogsDialog = ref(false)
+const showDescribeDialog = ref(false)
 const podLogs = ref('')
+const describeData = ref('')
 const nameOfSlectedPod = ref('')
 const resourceStore = useResourceStore()
 const { getPods } = storeToRefs(resourceStore)
+const { describeResource } = resourceStore
 
 const podHeaders = [
   { title: 'Name', value: 'name' },
@@ -72,11 +93,20 @@ onMounted(async () => {
 
 const fetchPodLogs = async (podName) => {
   // Placeholder for fetching pod logs
-  showLogsDiaog.value = true
+  showLogsDialog.value = true
   console.log(`Fetching logs for pod: ${podName}`)
   nameOfSlectedPod.value = podName
   podLogs.value = await resourceStore.fetchPodLogs(podName)
   //console.log(podLogs.value)
+}
+
+const describePod = async (podName) => {
+  // Placeholder for describing a pod
+  showDescribeDialog.value = true
+  nameOfSlectedPod.value = podName
+  console.log(`Describing pod: ${podName}`)
+  describeData.value = await describeResource('pod', podName)
+  //console.log(describeData.value)
 }
 
 onUnmounted(() => {

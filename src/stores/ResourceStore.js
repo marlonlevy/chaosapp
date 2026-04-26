@@ -68,6 +68,22 @@ export const useResourceStore = defineStore("resource", {
       }
     },
 
+    async describeResource(resourceType, resourceName) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/${resourceType}/${resourceName}/describe`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch details for ${resourceType} ${resourceName}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error(`Error fetching details for ${resourceType} ${resourceName}:`, error);
+        return null;
+      }
+    },
+
+
+
     parsePodLogs(logsInput) {
       /**
        * Parse pod logs from various formats:
