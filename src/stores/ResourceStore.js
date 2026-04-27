@@ -143,9 +143,9 @@ export const useResourceStore = defineStore("resource", {
       }
     },
 
-    async describeResource(resourceType, resourceName) {
+    async describeResource(resourceType, resourceName, namespace = 'default') {
       try {
-        const response = await fetch(`${API_BASE_URL}/${resourceType}/${resourceName}/describe`);
+        const response = await fetch(`${API_BASE_URL}/${resourceType}/${resourceName}/describe?namespace=${namespace}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch details for ${resourceType} ${resourceName}`);
         }

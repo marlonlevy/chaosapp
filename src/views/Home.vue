@@ -2,50 +2,18 @@
   <v-container fluid>
     <h1>Dashboard</h1>
 
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-card>
-          <v-card-title>Nodes</v-card-title>
-          <v-card-text>{{ getNodes.length }}</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card>
-          <v-card-title>Pods</v-card-title>
-          <v-card-text>{{ getPods.length }}</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card>
-          <v-card-title>Deployments</v-card-title>
-          <v-card-text>{{ getDeployments.length }}</v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-card>
-          <v-card-title>Services</v-card-title>
-          <v-card-text>{{ getServices.length }}</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card>
-          <v-card-title>PVC</v-card-title>
-          <v-card-text>{{ getPersistentVolumeClaims.length }}</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card>
-          <v-card-title>PV</v-card-title>
-          <v-card-text>{{ getPersistentVolumes.length }}</v-card-text>
+    <v-row comfortable>
+      <v-col cols="12" md="4" v-for="(item, index) in dashboardData" :key="index">
+        <v-card class="pa-2" outlined :to="item.path || '#'">
+          <v-card-title>{{ item.title }}</v-card-title>
+          <v-card-text>{{ item.value.length }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useResourceStore } from '@/stores/ResourceStore'
 import { storeToRefs } from 'pinia'
 
@@ -58,6 +26,15 @@ const {
   getPersistentVolumes,
   getServices,
 } = storeToRefs(resourceStore)
+
+const dashboardData = ref([
+  { title: 'Nodes', value: getNodes, path: '/nodes' },
+  { title: 'Pods', value: getPods, path: '/pods' },
+  { title: 'Deployments', value: getDeployments, path: '/deployments' },
+  { title: 'Services', value: getServices, path: '/services' },
+  { title: 'Persistent Volume Claims', value: getPersistentVolumeClaims },
+  { title: 'Persistent Volumes', value: getPersistentVolumes },
+])
 
 onMounted(async () => {
   try {

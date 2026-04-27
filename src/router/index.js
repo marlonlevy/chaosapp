@@ -7,7 +7,8 @@ const routes = [{
 },
 { path: '/nodes', name: 'Nodes', component: () => import('../views/NodeIndex.vue') },
 { path: '/pods', name: 'Pods', component: () => import('../views/PodIndex.vue') },
-{path: '/deployments', name: 'Deployments', component: () => import('../views/DeploymentIndex.vue') }]
+{path: '/deployments', name: 'Deployments', component: () => import('../views/DeploymentIndex.vue') },
+{path: '/services', name: 'Services', component: () => import('../views/ServicesIndex.vue') },]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

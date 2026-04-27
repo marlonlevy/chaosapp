@@ -2,6 +2,9 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" temporary>
       <!--  -->
+      <v-card flat height="100px">
+        <v-img :src="k8s_logo" contain height="100px" cover> </v-img>
+      </v-card>
       <v-list>
         <v-list-item
           v-for="(navBarItem, idx) in navBarItems"
@@ -36,6 +39,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import k8s_logo from '@/assets/img/kubernetes-blue-logo.png'
 
 const drawer = ref(null)
 const navBarItems = [
@@ -43,6 +47,7 @@ const navBarItems = [
   { title: 'Nodes', icon: 'mdi-server', route: '/nodes' },
   { title: 'Pods', icon: 'mdi-memory', route: '/pods' },
   { title: 'Deployments', icon: 'mdi-application', route: '/deployments' },
+  { title: 'Services', icon: 'mdi-cog', route: '/services' },
 ]
 </script>
 
