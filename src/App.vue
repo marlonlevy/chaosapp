@@ -42,6 +42,7 @@ const navBarItems = [
   { title: 'Home', icon: 'mdi-home', route: '/' },
   { title: 'Nodes', icon: 'mdi-server', route: '/nodes' },
   { title: 'Pods', icon: 'mdi-memory', route: '/pods' },
+  { title: 'Deployments', icon: 'mdi-application', route: '/deployments' },
 ]
 </script>
 

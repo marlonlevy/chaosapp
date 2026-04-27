@@ -24,8 +24,9 @@ export const useResourceStore = defineStore("resource", {
   }),
 
   getters: {
-    getNodes: (state) => state.nodes,
-    getPods: (state) => state.pods,
+    getNodes: (state) => state.nodes || [],
+    getPods: (state) => state.pods  || [],
+    getDeployments: (state) => state.deployments || [],
   },
 
   actions: {
@@ -51,6 +52,19 @@ export const useResourceStore = defineStore("resource", {
         this.pods = data;
       } catch (error) {
         console.error("Error fetching pods:", error);
+      }
+    },
+
+    async fetchDeployments() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/deployments`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch deployments");
+        }
+        const data = await response.json();
+        this.deployments = data;
+      } catch (error) {
+        console.error("Error fetching deployments:", error);
       }
     },
 
