@@ -21,12 +21,21 @@ export const useResourceStore = defineStore("resource", {
   state: () => ({
     nodes: [],
     pods: [],
+    deployments: [],
+    services: [],
+    performanceMetrics: {},
+    persistentVolumes: [],
+    persistentVolumeClaims: [],
   }),
 
   getters: {
     getNodes: (state) => state.nodes || [],
     getPods: (state) => state.pods  || [],
     getDeployments: (state) => state.deployments || [],
+    getServices: (state) => state.services || [],
+    getPerformanceMetrics: (state) => state.performanceMetrics || {},
+    getPersistentVolumes: (state) => state.persistentVolumes || [],
+    getPersistentVolumeClaims: (state) => state.persistentVolumeClaims || [],
   },
 
   actions: {
@@ -65,6 +74,58 @@ export const useResourceStore = defineStore("resource", {
         this.deployments = data;
       } catch (error) {
         console.error("Error fetching deployments:", error);
+      }
+    },
+
+    async fetchServices() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/services`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch services");
+        }
+        const data = await response.json();
+        this.services = data;
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    },
+
+    async fetchPersistentVolumes() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/persistentvolumes`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch persistent volumes");
+        }
+        const data = await response.json();
+        this.persistentVolumes = data;
+      } catch (error) {
+        console.error("Error fetching persistent volumes:", error);
+      }
+    },
+
+    async fetchPersistentVolumeClaims() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/persistentvolumeclaims`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch persistent volume claims");
+        }
+        const data = await response.json();
+        this.persistentVolumeClaims = data;
+      } catch (error) {
+        console.error("Error fetching persistent volume claims:", error);
+      }
+    },
+
+    async fetchPerformanceMetrics() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/performance-metrics`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch performance metrics");
+        }
+        const data = await response.json();
+        this.performanceMetrics = data;
+      } catch (error) {
+        console.error("Error fetching performance metrics:", error);
       }
     },
 
