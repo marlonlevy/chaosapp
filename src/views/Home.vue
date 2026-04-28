@@ -32,8 +32,12 @@ const dashboardData = ref([
   { title: 'Pods', value: getPods, path: '/pods' },
   { title: 'Deployments', value: getDeployments, path: '/deployments' },
   { title: 'Services', value: getServices, path: '/services' },
-  { title: 'Persistent Volume Claims', value: getPersistentVolumeClaims },
-  { title: 'Persistent Volumes', value: getPersistentVolumes },
+  {
+    title: 'Persistent Volume Claims',
+    value: getPersistentVolumeClaims,
+    path: '/persistentvolumeclaims',
+  },
+  { title: 'Persistent Volumes', value: getPersistentVolumes, path: '/persistentvolumes' },
 ])
 
 onMounted(async () => {
