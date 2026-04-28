@@ -48,6 +48,8 @@ const navBarItems = [
   { title: 'Pods', icon: 'mdi-memory', route: '/pods' },
   { title: 'Deployments', icon: 'mdi-application', route: '/deployments' },
   { title: 'Services', icon: 'mdi-cog', route: '/services' },
+  { title: 'PVC', icon: 'mdi-database', route: '/persistentvolumeclaims' },
+  { title: 'Persistent Volumes', icon: 'mdi-database', route: '/persistentvolumes' },
 ]
 </script>
 
