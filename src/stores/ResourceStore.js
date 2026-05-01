@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://192.168.2.43:30081/api/resources";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/resources";
 
 /**
  * Parse logs string into an array of log lines
