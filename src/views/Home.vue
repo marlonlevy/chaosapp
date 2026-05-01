@@ -58,7 +58,7 @@ onMounted(async () => {
 
 const testlocalHost = async () => {
   try {
-    const response = await fetch('http://localhost:5000/api/resources/pods')
+    const response = await fetch('api/resources/pods')
     const data = await response.json()
     console.log('Health check response:', data)
   } catch (error) {
