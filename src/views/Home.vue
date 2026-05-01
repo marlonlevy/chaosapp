@@ -49,9 +49,20 @@ onMounted(async () => {
       resourceStore.fetchServices(),
       resourceStore.fetchPersistentVolumeClaims(),
       resourceStore.fetchPersistentVolumes(),
+      testlocalHost(),
     ])
   } catch (error) {
     console.error('Error fetching data:', error)
   }
 })
+
+const testlocalHost = async () => {
+  try {
+    const response = await fetch('http://localhost:5000/api/resources/pods')
+    const data = await response.json()
+    console.log('Health check response:', data)
+  } catch (error) {
+    console.error('Error fetching health check:', error)
+  }
+}
 </script>
