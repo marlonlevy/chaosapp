@@ -24,7 +24,11 @@
 
   <informational-dialog v-model="showDialog" :title="dialogTitle">
     <template #body>
-      <pre class="text-subtitle-1 mt-2 text-green">{{ dialogData }}</pre>
+      <pod-describe-info
+        v-if="dialogTitle.startsWith('Describe: ') && dialogData"
+        :pod-data="dialogData"
+      ></pod-describe-info>
+      <pre v-else class="text-subtitle-1 mt-2 text-green">{{ dialogData }}</pre>
     </template>
   </informational-dialog>
 </template>
@@ -36,7 +40,7 @@ import { storeToRefs } from 'pinia'
 
 //components
 import InformationalDialog from '@/components/InformationalDialog.vue'
-
+import PodDescribeInfo from '@/components/PodDescribeInfo.vue'
 const showDialog = ref(false)
 const dialogData = ref('')
 const dialogTitle = ref('')
@@ -47,6 +51,7 @@ const { describeResource } = resourceStore
 
 const podHeaders = [
   { title: 'Name', value: 'name' },
+  { title: 'Ready', value: 'ready' },
   { title: 'Status', value: 'status' },
   { title: 'Restarts', value: 'restarts' },
   { title: 'Age', value: 'age' },
@@ -82,7 +87,7 @@ const describePod = async (podName) => {
   nameOfSelectedPod.value = podName
   console.log(`Describing pod: ${podName}`)
   dialogData.value = await describeResource('pod', podName)
-  //console.log(describeData.value)
+  //console.log(dialogData.value)
 }
 
 onUnmounted(() => {

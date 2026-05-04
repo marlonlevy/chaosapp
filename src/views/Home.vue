@@ -1,13 +1,9 @@
 <template>
   <v-container fluid>
     <h1>Dashboard</h1>
-
     <v-row comfortable>
       <v-col cols="12" md="4" v-for="(item, index) in dashboardData" :key="index">
-        <v-card class="pa-2" outlined :to="item.path || '#'">
-          <v-card-title>{{ item.title }}</v-card-title>
-          <v-card-text>{{ item.value.length }}</v-card-text>
-        </v-card>
+        <DashboardCard :item="item" />
       </v-col>
     </v-row>
   </v-container>
@@ -16,6 +12,8 @@
 import { onMounted, ref } from 'vue'
 import { useResourceStore } from '@/stores/ResourceStore'
 import { storeToRefs } from 'pinia'
+
+import DashboardCard from '@/components/ui/DashboardCard.vue'
 
 const resourceStore = useResourceStore()
 const {
@@ -28,16 +26,22 @@ const {
 } = storeToRefs(resourceStore)
 
 const dashboardData = ref([
-  { title: 'Nodes', value: getNodes, path: '/nodes' },
-  { title: 'Pods', value: getPods, path: '/pods' },
-  { title: 'Deployments', value: getDeployments, path: '/deployments' },
-  { title: 'Services', value: getServices, path: '/services' },
+  { title: 'Nodes', value: getNodes, path: '/nodes', icon: 'mdi-server' },
+  { title: 'Pods', value: getPods, path: '/pods', icon: 'mdi-cube-outline' },
+  { title: 'Deployments', value: getDeployments, path: '/deployments', icon: 'mdi-application' },
+  { title: 'Services', value: getServices, path: '/services', icon: 'mdi-cog' },
   {
     title: 'Persistent Volume Claims',
     value: getPersistentVolumeClaims,
     path: '/persistentvolumeclaims',
+    icon: 'mdi-database',
   },
-  { title: 'Persistent Volumes', value: getPersistentVolumes, path: '/persistentvolumes' },
+  {
+    title: 'Persistent Volumes',
+    value: getPersistentVolumes,
+    path: '/persistentvolumes',
+    icon: 'mdi-server-network',
+  },
 ])
 
 onMounted(async () => {
@@ -49,20 +53,9 @@ onMounted(async () => {
       resourceStore.fetchServices(),
       resourceStore.fetchPersistentVolumeClaims(),
       resourceStore.fetchPersistentVolumes(),
-      testlocalHost(),
     ])
   } catch (error) {
     console.error('Error fetching data:', error)
   }
 })
-
-const testlocalHost = async () => {
-  try {
-    const response = await fetch('api/resources/pods')
-    const data = await response.json()
-    console.log('Health check response:', data)
-  } catch (error) {
-    console.error('Error fetching health check:', error)
-  }
-}
 </script>

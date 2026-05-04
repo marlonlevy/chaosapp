@@ -14,6 +14,7 @@
               </v-col>
             </v-row>
           </template>
+
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn variant="outlined" @click="describeNode(item.name)">Describe</v-btn>
           </template>
@@ -24,7 +25,7 @@
 
   <informational-dialog v-model="showDescribeDialog" :title="`Describe: ${nameOfSelectedNode}`">
     <template #body>
-      <pre class="text-subtitle-1 mt-2 text-green">{{ describeData }}</pre>
+      <node-describe-info-card :nodeData="describeData" />
     </template>
   </informational-dialog>
 </template>
@@ -36,6 +37,7 @@ import { storeToRefs } from 'pinia'
 
 //components
 import InformationalDialog from '@/components/InformationalDialog.vue'
+import NodeDescribeInfoCard from '@/components/node/NodeDescribeInfoCard.vue'
 
 const resourceStore = useResourceStore()
 const { getNodes } = storeToRefs(resourceStore)
@@ -79,8 +81,9 @@ onUnmounted(() => {
 const describeNode = async (nodeName) => {
   //console.log(`Describing node: ${nodeName}`)
   nameOfSelectedNode.value = nodeName
-  showDescribeDialog.value = true
   describeData.value = await describeResource('node', nodeName)
+  showDescribeDialog.value = true
+
   //console.log(describeData)
 }
 </script>

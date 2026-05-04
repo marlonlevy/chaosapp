@@ -35,7 +35,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: false },
   title: { type: String, default: '' },
   subtitle: { type: String, default: '' },
-  maxWidth: { type: [Number, String], default: 960 },
+  maxWidth: { type: [Number, String], default: 760 },
   closeLabel: { type: String, default: 'Close' },
   density: { type: String, default: 'comfortable' },
 })
