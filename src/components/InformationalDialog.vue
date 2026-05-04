@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" :max-width="maxWidth" persistent scrollable>
     <v-card>
-      <v-card-title class="d-flex align-center justify-space-between">
+      <v-card-title v-if="showTitle" class="d-flex align-center justify-space-between">
         <div>
           <div class="text-h6">{{ title }}</div>
           <div v-if="subtitle" class="text-subtitle-2 text-secondary">{{ subtitle }}</div>
@@ -38,6 +38,7 @@ const props = defineProps({
   maxWidth: { type: [Number, String], default: 760 },
   closeLabel: { type: String, default: 'Close' },
   density: { type: String, default: 'comfortable' },
+  showTitle: { type: Boolean, default: true },
 })
 
 const emit = defineEmits(['update:modelValue', 'update:search'])

@@ -24,9 +24,10 @@
   <informational-dialog
     v-model="showDescribeDialog"
     :title="`Describe: ${nameOfSelectedDeployment}`"
+    :show-title="false"
   >
     <template #body>
-      <pre class="text-subtitle-1 mt-2 text-green">{{ describeData }}</pre>
+      <DeploymentDescribeCard :deployment="describeData" />
     </template>
   </informational-dialog>
 </template>
@@ -37,6 +38,7 @@ import { storeToRefs } from 'pinia'
 
 //components
 import InformationalDialog from '@/components/InformationalDialog.vue'
+import DeploymentDescribeCard from '@/components/deployment/DeploymentDescribeCard.vue'
 
 const resourceStore = useResourceStore()
 const { getDeployments } = storeToRefs(resourceStore)
@@ -73,8 +75,9 @@ onUnmounted(() => {
 const describeDeployment = async (deploymentName) => {
   console.log(`Describing deployment: ${deploymentName}`)
   nameOfSelectedDeployment.value = deploymentName
-  showDescribeDialog.value = true
+
   describeData.value = await resourceStore.describeResource('deployment', deploymentName)
+  showDescribeDialog.value = true
 
   // Placeholder for fetching and displaying deployment details
 }
