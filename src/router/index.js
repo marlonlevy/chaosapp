@@ -11,6 +11,7 @@ const routes = [{
 {path: '/services', name: 'Services', component: () => import('../views/ServicesIndex.vue') },
 {path: '/persistentvolumeclaims', name: 'PersistentVolumeClaims', component: () => import('../views/PersistentVolumeClaimIndex.vue') },
 {path: '/persistentvolumes', name: 'PersistentVolumes', component: () => import('../views/PersistentVolumeIndex.vue') },
+{path: '/upload', name: 'UploadDocument', component: () => import('../views/UploadDocument.vue') },
 ]
 
 const router = createRouter({
