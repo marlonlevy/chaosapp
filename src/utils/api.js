@@ -31,5 +31,5 @@ export function getFileApiBaseUrl() {
     }
   }
 
-  return '/api/files';
+  return '/api/file';
 }
