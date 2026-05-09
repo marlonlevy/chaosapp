@@ -31,45 +31,28 @@ export const useFileStore = defineStore('file', {
     },
 
     uploadFile(file) {
-      console.log(FILE_API_BASE_URL)
-      return new Promise((resolve, reject) => {
-        this.error = null
-        this.uploadProgress = 0
+      this.error = null
+      const formData = new FormData()
+      formData.append('file', file)
 
-        const formData = new FormData()
-        formData.append('file', file)
-
-        const xhr = new XMLHttpRequest()
-        xhr.open('POST', `${FILE_API_BASE_URL}/upload`)
-
-        xhr.upload.onprogress = (event) => {
-          if (event.lengthComputable) {
-            this.uploadProgress = Math.round((event.loaded / event.total) * 100)
-          }
-        }
-
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-              const result = JSON.parse(xhr.responseText)
-              resolve(result)
-            } catch  {
-              resolve(xhr.responseText)
-
-            }
-          } else {
-            this.error = `Upload failed: ${xhr.statusText}`
-            reject(new Error(this.error))
-          }
-        }
-
-        xhr.onerror = () => {
-          this.error = 'Upload network error'
-          reject(new Error(this.error))
-        }
-
-        xhr.send(formData)
+      fetch(FILE_API_BASE_URL + '/upload', {
+        method: 'POST',
+        body: formData,
       })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to upload file')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          console.log('File uploaded successfully:', data)
+          this.fetchFiles() // Refresh the file list after upload
+        })
+        .catch((err) => {
+          this.error = err.message
+        })
+
     },
 
     async downloadFile(fileId, filename = 'downloaded-file') {

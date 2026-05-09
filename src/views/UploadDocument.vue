@@ -2,26 +2,59 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <h1>Upload Document</h1>
-        <v-file-input
-          label="Select a file to upload"
-          accept=".txt,.pdf,.docx"
-          v-model="file"
-        ></v-file-input>
+        <v-card>
+          <v-card-title>Upload Document</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-file-input
+              variant="outlined"
+              label="Select a file to upload"
+              accept=".txt,.pdf,.docx"
+              v-model="file"
+              hide-details
+            ></v-file-input>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn block variant="outlined" color="primary" @click="uploadFile">Upload</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col>
-        <v-btn color="primary" @click="uploadFile">Upload</v-btn>
+        <v-table>
+          <thead>
+            <tr>
+              <th colspan="2"><h3>Available Files for Download</h3></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="filesToDownload.length === 0">
+              <td colspan="2">No files available.</td>
+            </tr>
+            <tr v-for="(file, idx) in filesToDownload.files" :key="idx">
+              <td>{{ file }}</td>
+              <td align="right">
+                <v-btn small color="primary" @click="downloadFile(file)">Download</v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="showAlert">
       <v-col>
-        <v-list>
-          <v-list-item v-for="(file, idx) in filesToDownload" :key="idx">
-            <v-list-item-title>{{ file }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
+        <v-alert
+          :type="alertType"
+          variant="tonal"
+          density="comfortable"
+          prominent
+          dismissible
+          v-model="showAlert"
+        >
+          {{ alertMessage }}
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -33,39 +66,54 @@ import { useFileStore } from '@/stores/FileStore'
 
 const file = ref(null)
 const filesToDownload = ref([])
+const showAlert = ref(false)
+const alertMessage = ref('')
+const alertType = ref('success')
 
 const fileStore = useFileStore()
 
-const uploadFile = async () => {
-  if (file.value) {
-    const formData = new FormData()
-    formData.append('file', file.value)
+const showStatus = (message, type = 'success') => {
+  alertMessage.value = message
+  alertType.value = type
+  showAlert.value = true
+}
 
-    try {
-      await fileStore.uploadFile(formData)
-      alert('File uploaded successfully')
-      // Refresh the list of files after upload
-      await fileStore.fetchFiles()
-      filesToDownload.value = fileStore.files
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      alert('Failed to upload file')
-    }
-  } else {
-    console.log('No file selected')
+const uploadFile = async () => {
+  if (!file.value) {
+    showStatus('Please select a file before uploading.', 'error')
+    return
+  }
+
+  try {
+    await fileStore.uploadFile(file.value)
+    showStatus('File uploaded successfully.', 'success')
+    await fileStore.fetchFiles()
+    filesToDownload.value = fileStore.files
+  } catch (error) {
+    console.error('Error uploading file:', error)
+    showStatus('Failed to upload file.', 'error')
+  }
+}
+
+const downloadFile = async (fileId) => {
+  try {
+    await fileStore.downloadFile(fileId, fileId) // Using fileId as filename for simplicity
+    showStatus('File downloaded successfully.', 'success')
+  } catch (error) {
+    console.error('Error downloading file:', error)
+    showStatus('Failed to download file.', 'error')
   }
 }
 
 onMounted(() => {
-  // Fetch the list of uploaded files from the backend
   fileStore
     .fetchFiles()
     .then(() => {
       filesToDownload.value = fileStore.files
     })
-
     .catch((error) => {
       console.error('Error fetching files:', error)
+      showStatus('Unable to load file list.', 'error')
     })
 })
 </script>

@@ -50,6 +50,7 @@ const navBarItems = [
   { title: 'Services', icon: 'mdi-cog', route: '/services' },
   { title: 'PVC', icon: 'mdi-database', route: '/persistentvolumeclaims' },
   { title: 'Persistent Volumes', icon: 'mdi-server-network', route: '/persistentvolumes' },
+  { title: 'File Manager', icon: 'mdi-file-upload', route: '/file-manager' },
 ]
 </script>
 
