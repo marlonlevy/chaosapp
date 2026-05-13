@@ -1,19 +1,13 @@
 <template>
   <v-container fluid>
     <h1>Persistent Volumes</h1>
-    <v-row comfortable>
+
+    <v-row>
       <v-col>
-        <v-data-table :items="getPersistentVolumes" :headers="persistentVolumeHeaders">
-          <template #no-results>
-            <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-col class="text-center" cols="12">
-                <v-icon size="64">mdi-database</v-icon>
-                <p class="text-subtitle-1 mt-2">No persistent volumes found.</p>
-              </v-col>
-            </v-row>
-          </template>
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-btn variant="outlined" @click="describePersistentVolume(item.name)">Describe</v-btn>
+        <v-data-table :items="getPersistentVolumes" :loading="loading" :headers="pvHeaders">
+          <!-- "#" is the same as "v-slot:" -->
+          <template #[`item.actions`]="{ item }">
+            <v-btn small color="primary" @click="() => displayDescribeDialog(item)">Describe</v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -22,9 +16,13 @@
       >{{ getPersistentVolumes.length }} Persistent Volumes found.</span
     >
   </v-container>
-  <informational-dialog v-model="showDescribeDialog" :title="`Describe: ${nameOfSelectedPV}`">
+  <informational-dialog
+    :show-title="false"
+    v-model="showDescribeDialog"
+    :title="`Describe: ${nameOfSelectedPV}`"
+  >
     <template #body>
-      <pre class="text-subtitle-1 mt-2 text-green">{{ describeData }}</pre>
+      <p-v-describe-info-card :pv-data="describeData" />
     </template>
   </informational-dialog>
 </template>
@@ -33,44 +31,43 @@ import { onMounted, ref } from 'vue'
 import { useResourceStore } from '@/stores/ResourceStore'
 import { storeToRefs } from 'pinia'
 
+import PVDescribeInfoCard from '@/components/pv/PVDescribeInfoCard.vue'
 import InformationalDialog from '@/components/InformationalDialog.vue'
 
 const resourceStore = useResourceStore()
 const { getPersistentVolumes } = storeToRefs(resourceStore)
-
 const describeData = ref('')
 const nameOfSelectedPV = ref('')
 const showDescribeDialog = ref(false)
-
-const persistentVolumeHeaders = [
+const loading = ref(false)
+const pvHeaders = [
   { title: 'Name', value: 'name' },
-  { title: 'Status', value: 'status' },
   { title: 'Capacity', value: 'capacity' },
   { title: 'Access Modes', value: 'access_modes' },
   { title: 'Reclaim Policy', value: 'reclaim_policy' },
-  { title: 'Storage Class', value: 'storage_class' },
+  { title: 'Status', value: 'status' },
   { title: 'Claim', value: 'claim' },
+  { title: 'Storage Class', value: 'storage_class' },
+  { title: 'Reason', value: 'reason' },
+  { title: 'Volume Mode', value: 'volume_mode' },
   { title: 'Age', value: 'age' },
-  { title: '', value: 'actions' },
+  { title: 'Actions', value: 'actions', sortable: false },
 ]
 
 onMounted(async () => {
+  loading.value = true
   try {
     await resourceStore.fetchPersistentVolumes()
   } catch (error) {
     console.error('Error fetching persistent volumes:', error)
+  } finally {
+    loading.value = false
   }
 })
 
-const describePersistentVolume = async (name) => {
-  try {
-    nameOfSelectedPV.value = name
-    const response = await resourceStore.describeResource('persistentvolumes', name)
-    describeData.value = response
-    showDescribeDialog.value = true
-  } catch (error) {
-    console.error('Error describing persistent volume:', error)
-  }
+const displayDescribeDialog = (selectedPv) => {
+  nameOfSelectedPV.value = selectedPv.name
+  describeData.value = selectedPv
+  showDescribeDialog.value = true
 }
 </script>
-<style scoped></style>

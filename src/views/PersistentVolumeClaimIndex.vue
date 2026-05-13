@@ -26,7 +26,7 @@
   >
   <informational-dialog v-model="showDescribeDialog" :title="`Describe: ${nameOfSelectedPVC}`">
     <template #body>
-      <pre class="text-subtitle-1 mt-2 text-green">{{ describeData }}</pre>
+      <p-v-c-describe-info-card :pvc-data="describeData" />
     </template>
   </informational-dialog>
 </template>
@@ -36,6 +36,7 @@ import { useResourceStore } from '@/stores/ResourceStore'
 import { storeToRefs } from 'pinia'
 
 import InformationalDialog from '@/components/InformationalDialog.vue'
+import PVCDescribeInfoCard from '@/components/pvc/PVCDescribeInfoCard.vue'
 
 const resourceStore = useResourceStore()
 const { getPersistentVolumeClaims } = storeToRefs(resourceStore)
