@@ -21,10 +21,14 @@
       </v-col>
     </v-row>
   </v-container>
-  <span class="ma-2 text-caption">{{ getServices.length }} Services found.</span>
-  <informational-dialog v-model="showDescribeDialog" :title="`Describe: ${nameOfSelectedService}`">
+  <span class="ma-2 text-label-small">{{ getServices.length }} Services found.</span>
+  <informational-dialog
+    v-model="showDescribeDialog"
+    :title="`Describe: ${nameOfSelectedService}`"
+    :show-title="false"
+  >
     <template #body>
-      <pre class="text-subtitle-1 mt-2 text-green">{{ describeData }}</pre>
+      <service-describe-card :service="selectedService" />
     </template>
   </informational-dialog>
 </template>
@@ -35,12 +39,13 @@ import { storeToRefs } from 'pinia'
 
 //components
 import InformationalDialog from '@/components/InformationalDialog.vue'
+import ServiceDescribeCard from '@/components/services/ServiceDescribeCard.vue'
 
 const resourceStore = useResourceStore()
 const { getServices } = storeToRefs(resourceStore)
-const describeData = ref('')
 const nameOfSelectedService = ref('')
 const showDescribeDialog = ref(false)
+const selectedService = ref(null)
 
 const serviceHeaders = [
   { title: 'Name', value: 'name' },
@@ -64,8 +69,8 @@ onMounted(async () => {
 const describeService = async (name, namespace) => {
   try {
     nameOfSelectedService.value = name
+    selectedService.value = await resourceStore.describeResource('service', name, namespace)
     showDescribeDialog.value = true
-    describeData.value = await resourceStore.describeResource('service', name, namespace)
     //console.log(describeData.value)
   } catch (error) {
     console.error('Error describing service:', error)

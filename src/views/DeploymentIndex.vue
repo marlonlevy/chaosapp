@@ -19,7 +19,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <span class="text-caption">{{ getDeployments.length }} deployments available</span>
+    <span class="text-label-small">{{ getDeployments.length }} deployments available</span>
   </v-container>
   <informational-dialog
     v-model="showDescribeDialog"

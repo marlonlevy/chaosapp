@@ -1,6 +1,6 @@
 <template>
-  <h1>Persistent Volume Claims</h1>
   <v-container fluid>
+    <h1>Persistent Volume Claims</h1>
     <v-row>
       <v-col>
         <v-data-table :items="getPersistentVolumeClaims" :headers="pvcHeaders">
@@ -21,7 +21,7 @@
       </v-col>
     </v-row>
   </v-container>
-  <span class="ma-2 text-caption"
+  <span class="ma-2 text-label-small"
     >{{ getPersistentVolumeClaims.length }} Persistent Volume Claims found.</span
   >
   <informational-dialog v-model="showDescribeDialog" :title="`Describe: ${nameOfSelectedPVC}`">

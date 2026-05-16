@@ -12,7 +12,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <span class="ma-2 text-caption"
+    <span class="ma-2 text-label-small"
       >{{ getPersistentVolumes.length }} Persistent Volumes found.</span
     >
   </v-container>

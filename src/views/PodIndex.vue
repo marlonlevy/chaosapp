@@ -28,7 +28,11 @@
         v-if="dialogTitle.startsWith('Describe: ') && dialogData"
         :pod-data="dialogData"
       ></pod-describe-info>
-      <pre v-else class="text-subtitle-1 mt-2 text-green">{{ dialogData }}</pre>
+      <log-viewer-card
+        v-else-if="dialogTitle.startsWith('Logs: ') && dialogData"
+        :logs="dialogData.logs"
+      ></log-viewer-card>
+      <!-- <pre v-else class="text-title-small mt-2 text-green">{{ dialogData.logs }}</pre> -->
     </template>
   </informational-dialog>
 </template>
@@ -41,6 +45,8 @@ import { storeToRefs } from 'pinia'
 //components
 import InformationalDialog from '@/components/InformationalDialog.vue'
 import PodDescribeInfo from '@/components/PodDescribeInfo.vue'
+import LogViewerCard from '@/components/LogViewerCard.vue'
+
 const showDialog = ref(false)
 const dialogData = ref('')
 const dialogTitle = ref('')
@@ -63,9 +69,9 @@ const podHeaders = [
 let intervalId = null
 
 onMounted(async () => {
-  intervalId = setInterval(async () => {
+  /* intervalId = setInterval(async () => {
     await resourceStore.fetchPods()
-  }, 30000)
+  }, 30000) */
   await resourceStore.fetchPods()
   console.log('Pods component mounted')
 })
@@ -77,22 +83,23 @@ const fetchPodLogs = async (podName) => {
   console.log(`Fetching logs for pod: ${podName}`)
   nameOfSelectedPod.value = podName
   dialogData.value = await resourceStore.fetchPodLogs(podName)
-  //console.log(podLogs.value)
+  //console.log(dialogData.value)
 }
 
 const describePod = async (podName) => {
   // Placeholder for describing a pod
   dialogTitle.value = `Describe: ${podName}`
-  showDialog.value = true
   nameOfSelectedPod.value = podName
-  console.log(`Describing pod: ${podName}`)
+
   dialogData.value = await describeResource('pod', podName)
+  showDialog.value = true
   //console.log(dialogData.value)
 }
 
 onUnmounted(() => {
-  if (intervalId) {
+  /*if (intervalId) {
     clearInterval(intervalId)
-  }
+  }*/
+  console.log('Pods component unmounted')
 })
 </script>
