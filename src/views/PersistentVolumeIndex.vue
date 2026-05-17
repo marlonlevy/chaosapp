@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <h1>Persistent Volumes</h1>
+    <h1 class="my-0">Persistent Volumes</h1>
 
     <v-row>
       <v-col>

@@ -37,20 +37,14 @@
           ></v-list-item>
           <v-list-item
             title="Restarted At"
-            :subtitle="podData.metadata.annotations['kubectl.kubernetes.io/restartedAt']"
+            :subtitle="
+              podData.metadata?.annotations &&
+              podData.metadata?.annotations['kubectl.kubernetes.io/restartedAt']
+            "
           ></v-list-item>
           <v-list-item title="Labels">
             <template v-slot:subtitle>
-              <div class="mt-1">
-                <v-chip
-                  v-for="(val, key) in podData.metadata.labels"
-                  :key="key"
-                  size="x-small"
-                  class="mr-1"
-                >
-                  {{ key }}: {{ val }}
-                </v-chip>
-              </div>
+              <resource-label-chips :labels-object="podData.metadata.labels"></resource-label-chips>
             </template>
           </v-list-item>
         </v-list>
@@ -110,6 +104,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import ResourceLabelChips from './ui/ResourceLabelChips.vue'
 
 const props = defineProps({
   podData: {

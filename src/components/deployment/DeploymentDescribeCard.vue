@@ -22,11 +22,19 @@
         </tr>
         <tr>
           <td><strong>Labels:</strong></td>
-          <td>{{ JSON.stringify(deployment.metadata.labels) }}</td>
+          <td>
+            <resource-label-chips
+              :labels-object="deployment.metadata.labels"
+            ></resource-label-chips>
+          </td>
         </tr>
         <tr>
           <td><strong>Annotations:</strong></td>
-          <td>{{ JSON.stringify(deployment.metadata.annotations) }}</td>
+          <td>
+            <resource-annotation-chips
+              :annotations-object="deployment.metadata.annotations"
+            ></resource-annotation-chips>
+          </td>
         </tr>
         <!-- Add more fields as needed -->
       </tbody>
@@ -35,21 +43,18 @@
     <v-card-text>
       <!-- Deployment content goes here -->
       <h3>Conditions</h3>
-      <v-list>
-        <v-list-item v-for="(condition, idx) in deployment.status.conditions" :key="idx">
-          <v-list-item-title>{{ condition.type }} </v-list-item-title>
-          <v-list-item-subtitle>{{ condition.message }}</v-list-item-subtitle>
-          <template v-slot:append>
-            <v-list-item-action
-              ><v-chip>{{ condition.status }}</v-chip></v-list-item-action
-            >
-          </template>
-        </v-list-item>
-      </v-list>
+      <resource-condition-table
+        v-if="deployment?.status?.conditions"
+        :items="deployment.status.conditions"
+      ></resource-condition-table>
     </v-card-text>
   </v-card>
 </template>
 <script setup>
+import ResourceConditionTable from '../ui/ResourceConditionTable.vue'
+import ResourceLabelChips from '../ui/ResourceLabelChips.vue'
+import ResourceAnnotationChips from '../ui/ResourceAnnotationChips.vue'
+
 defineProps({
   deployment: {
     type: Object,

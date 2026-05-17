@@ -2,9 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <h1>Nodes</h1>
-        <div>{{ getNodes.length }} nodes available</div>
-
+        <h1 class="my-0">Nodes</h1>
         <v-data-table :items="getNodes" :headers="nodeHeaders">
           <template #no-results>
             <v-row class="fill-height ma-0" align="center" justify="center">
@@ -19,6 +17,7 @@
             <v-btn variant="outlined" @click="describeNode(item.name)">Describe</v-btn>
           </template>
         </v-data-table>
+        <div class="text-label-small">{{ getNodes.length }} nodes available</div>
       </v-col>
     </v-row>
   </v-container>

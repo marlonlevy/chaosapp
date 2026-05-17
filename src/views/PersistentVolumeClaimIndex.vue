@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <h1>Persistent Volume Claims</h1>
+    <h1 class="my-0">Persistent Volume Claims</h1>
     <v-row>
       <v-col>
         <v-data-table :items="getPersistentVolumeClaims" :headers="pvcHeaders">

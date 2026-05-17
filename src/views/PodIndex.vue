@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <h1>Pods</h1>
+    <h1 class="my-0">Pods</h1>
     <v-row>
       <v-col cols="12">
         <v-data-table :items="getPods" :headers="podHeaders" hide-default-footer>
@@ -19,7 +19,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    {{ getPods.length }} pods available
+    <span class="text-title-small">{{ getPods.length }} pods available</span>
   </v-container>
 
   <informational-dialog v-model="showDialog" :title="dialogTitle">

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-4">
+  <v-card class="pa-4" variant="outlined" flat>
     <v-row align="center" justify="space-between">
       <v-col cols="8">
         <div class="d-flex align-center">
@@ -67,15 +67,15 @@
         </v-list>
 
         <div class="mt-4 mb-2"><strong>Annotations</strong></div>
-        <div v-if="service?.metadata?.annotations">
-          <div
-            v-for="(val, key) in service?.metadata?.annotations"
-            :key="key"
-            class="text-caption grey--text"
-          >
-            {{ key }}: {{ val }}
-          </div>
-        </div>
+
+        <resource-annotation-chips
+          v-if="service?.metadata?.annotations"
+          size="small"
+          class="text-caption grey--text"
+          :annotations-object="service.metadata.annotations"
+        >
+        </resource-annotation-chips>
+
         <div v-else>N/A</div>
       </v-col>
     </v-row>
@@ -85,6 +85,10 @@
 
 <script setup>
 import { computed } from 'vue'
+
+//components
+import ResourceAnnotationChips from '../ui/ResourceAnnotationChips.vue'
+
 const props = defineProps({
   service: {
     type: Object,

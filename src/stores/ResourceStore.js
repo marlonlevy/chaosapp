@@ -158,6 +158,22 @@ export const useResourceStore = defineStore("resource", {
       }
     },
 
+    async deploymentRestart(resourceName, namespace = 'default'){
+      try{
+        const response = await fetch(`${API_BASE_URL}/deployments/${resourceName}/restart?namespace=${namespace}`,{
+          method:"POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+        });
+
+      }catch(error){
+        console.error(`Error restarting deployment ${resourceName}:`, error);
+        return null;
+      }
+    },
+
 
 
     parsePodLogs(logsInput) {

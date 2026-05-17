@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="600" height="400px">
+  <v-card variant="outlined" class="mx-auto" max-width="600" height="400px">
     <v-card-item>
       <v-card-title>{{ nodeData.metadata.name }}</v-card-title>
       <v-card-subtitle>{{ nodeData.metadata.namespace }}</v-card-subtitle>
@@ -27,7 +27,10 @@
           ></v-list-item>
           <v-list-item title="Labels">
             <template v-slot:subtitle>
-              <div class="mt-1">
+              <resource-label-chips
+                :labels-object="nodeData.metadata.labels"
+              ></resource-label-chips>
+              <!-- <div class="mt-1">
                 <v-chip
                   v-for="(val, key) in nodeData.metadata.labels"
                   :key="key"
@@ -36,42 +39,37 @@
                 >
                   {{ key }}: {{ val }}
                 </v-chip>
-              </div>
+              </div> -->
             </template>
           </v-list-item>
         </v-list>
       </v-window-item>
       <!-- Images window -->
       <v-window-item value="images">
-        <v-list
-          lines="two"
-          density="compact"
-          v-if="nodeData.status.images && nodeData.status.images.length"
-        >
-          <v-list-item
-            v-for="(image, index) in nodeData.status.images"
-            :key="index"
-            :title="image?.names[0] || 'Image ' + index"
-            :subtitle="`Size: ${Math.round(image?.size_bytes / (1024 * 1024))} MB`"
-          ></v-list-item>
+        <v-list lines="two" comfortable v-if="nodeData?.status && nodeData?.status?.images.length">
+          <v-list-item v-for="(image, idx) in nodeData.status.images" :key="'idx' + idx">
+            {{ image?.names ? image?.names[0] : 'Image ' + idx }}
+            <v-list-item-subtitle>{{
+              `Size: ${Math.round(image?.size_bytes / (1024 * 1024))} MB`
+            }}</v-list-item-subtitle>
+          </v-list-item>
         </v-list>
       </v-window-item>
       <!-- Conditions window -->
       <v-window-item value="conditions">
-        <v-list lines="two" density="compact">
-          <v-list-item
-            v-for="condition in nodeData.status.conditions"
-            :key="condition.type"
-            :title="condition.type"
-            :subtitle="`Status: ${condition.status}, Last Transition: ${condition.last_transition_time}`"
-          ></v-list-item>
-        </v-list>
+        <resource-condition-table
+          v-if="nodeData?.status?.conditions"
+          :items="nodeData.status.conditions"
+        ></resource-condition-table>
       </v-window-item>
     </v-window>
   </v-card>
 </template>
 <script setup>
 import { computed, ref } from 'vue'
+
+import ResourceConditionTable from '../ui/ResourceConditionTable.vue'
+import ResourceLabelChips from '../ui/ResourceLabelChips.vue'
 
 const props = defineProps({
   nodeData: {
@@ -94,12 +92,6 @@ const statusColor = computed(() => {
       return 'grey'
   }
 })
-
-const formatDate = (dateStr) => {
-  if (!dateStr) return 'N/A'
-  const date = new Date(dateStr)
-  return date.toLocaleString()
-}
 
 const nodeStatus = computed(() => {
   const conditions = props.nodeData.status?.conditions || []

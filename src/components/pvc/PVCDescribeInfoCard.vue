@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card variant="outlined" flat>
     <v-card-title>{{ pvcData.name }}</v-card-title>
     <v-card-text>
       <p><strong>Namespace:</strong> {{ pvcData.namespace }}</p>

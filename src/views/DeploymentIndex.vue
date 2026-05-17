@@ -15,6 +15,9 @@
           <template v-slot:[`item.actions`]="{ item }">
             <!-- Placeholder for future actions like scaling or deleting deployments -->
             <v-btn variant="outlined" @click="describeDeployment(item.name)"> Describe </v-btn>
+            <v-btn class="ml-1" variant="outlined" @click="requestRestartConfirmation(item.name)">
+              Restart
+            </v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -30,6 +33,15 @@
       <DeploymentDescribeCard :deployment="describeData" />
     </template>
   </informational-dialog>
+  <confirmation-dialog
+    v-model="showConfirmationDialog"
+    max-width="500px"
+    @on-confirm="restartDeployment"
+  >
+    <div class="text-white">
+      `Are you sure you want to restart deployment ${nameOfSelectedDeployment} ?`
+    </div>
+  </confirmation-dialog>
 </template>
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
@@ -39,36 +51,33 @@ import { storeToRefs } from 'pinia'
 //components
 import InformationalDialog from '@/components/InformationalDialog.vue'
 import DeploymentDescribeCard from '@/components/deployment/DeploymentDescribeCard.vue'
+import ConfirmationDialog from '@/components/ui/ConfirmationDialog.vue'
 
 const resourceStore = useResourceStore()
 const { getDeployments } = storeToRefs(resourceStore)
 const showDescribeDialog = ref(false)
 const nameOfSelectedDeployment = ref('')
 const describeData = ref('')
+const showConfirmationDialog = ref(true)
 
-let intervalId = null
 const deploymentHeaders = [
   { title: 'Name', value: 'name' },
   { title: 'Reade', value: 'ready' },
   { title: 'Available', value: 'available' },
   { title: 'Age', value: 'age' },
-  { title: '', value: 'actions' },
+  { title: '', value: 'actions', align: 'right' },
 ]
 
 onMounted(async () => {
   console.log('DeploymentIndex component mounted')
   // You can set up any necessary data fetching or intervals here
-  intervalId = setInterval(async () => {
-    await resourceStore.fetchDeployments()
-  }, 30000) // Fetch deployments every 30 seconds
+
   resourceStore.fetchDeployments() // Initial fetch on mount
 })
 
 onUnmounted(() => {
   console.log('DeploymentIndex component unmounted')
-  if (intervalId) {
-    clearInterval(intervalId)
-  }
+
   // Clean up any intervals or resources here
 })
 
@@ -80,5 +89,16 @@ const describeDeployment = async (deploymentName) => {
   showDescribeDialog.value = true
 
   // Placeholder for fetching and displaying deployment details
+}
+
+const restartDeployment = async () => {
+  const deploymentName = nameOfSelectedDeployment.value
+  console.log(`Restarting deployment: ${deploymentName}`)
+  await resourceStore.deploymentRestart(deploymentName)
+}
+
+const requestRestartConfirmation = (deploymentName) => {
+  nameOfSelectedDeployment.value = deploymentName
+  showConfirmationDialog.value = true
 }
 </script>

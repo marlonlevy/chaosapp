@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card variant="outlined" flat>
     <v-card-title>{{ pvData.name }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text>
