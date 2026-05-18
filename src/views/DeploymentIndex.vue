@@ -24,11 +24,7 @@
     </v-row>
     <span class="text-label-small">{{ getDeployments.length }} deployments available</span>
   </v-container>
-  <informational-dialog
-    v-model="showDescribeDialog"
-    :title="`Describe: ${nameOfSelectedDeployment}`"
-    :show-title="false"
-  >
+  <informational-dialog v-model="showDescribeDialog" :show-title="false">
     <template #body>
       <DeploymentDescribeCard :deployment="describeData" />
     </template>
@@ -82,11 +78,13 @@ onUnmounted(() => {
 })
 
 const describeDeployment = async (deploymentName) => {
-  console.log(`Describing deployment: ${deploymentName}`)
+  //console.log(`Describing deployment: ${deploymentName}`)
   nameOfSelectedDeployment.value = deploymentName
 
   describeData.value = await resourceStore.describeResource('deployment', deploymentName)
   showDescribeDialog.value = true
+
+  //console.log(describeData.value)
 
   // Placeholder for fetching and displaying deployment details
 }

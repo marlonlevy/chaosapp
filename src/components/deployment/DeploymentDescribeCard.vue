@@ -6,19 +6,19 @@
       <tbody>
         <tr>
           <td width="150px"><strong>Name:</strong></td>
-          <td>{{ deployment.name }}</td>
+          <td>{{ deployment.metadata.name }}</td>
         </tr>
         <tr>
           <td><strong>Namespace:</strong></td>
-          <td>{{ deployment.namespace }}</td>
+          <td>{{ deployment.metadata.namespace }}</td>
         </tr>
         <tr>
           <td><strong>Replicas:</strong></td>
-          <td>{{ deployment.status.available_replicas + '/' + deployment.status.replicas }}</td>
+          <td>{{ deployment.status.availableReplicas + '/' + deployment.status.replicas }}</td>
         </tr>
         <tr>
           <td><strong>CreationTimeStamp:</strong></td>
-          <td>{{ deployment.metadata.creation_timestamp }}</td>
+          <td>{{ deployment.metadata.creationTimestamp }}</td>
         </tr>
         <tr>
           <td><strong>Labels:</strong></td>

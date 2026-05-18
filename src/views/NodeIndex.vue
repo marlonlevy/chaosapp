@@ -63,19 +63,10 @@ const nodeHeaders = [
 ]
 
 onMounted(async () => {
-  intervalId = setInterval(async () => {
-    await resourceStore.fetchNodes()
-  }, 30000)
   await resourceStore.fetchNodes()
-  console.log('Home component mounted')
 })
 
-onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId)
-    console.log('Home component unmounted, interval cleared')
-  }
-})
+onUnmounted(() => {})
 
 const describeNode = async (nodeName) => {
   //console.log(`Describing node: ${nodeName}`)
@@ -83,6 +74,6 @@ const describeNode = async (nodeName) => {
   describeData.value = await describeResource('node', nodeName)
   showDescribeDialog.value = true
 
-  //console.log(describeData)
+  console.log(describeData.value)
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-card variant="outlined" class="mx-auto" max-width="600" height="400px">
+  <v-card variant="outlined" class="mx-auto" min-width="600" min-height="400px">
     <v-card-item>
       <v-card-title>{{ nodeData.metadata.name }}</v-card-title>
       <v-card-subtitle>{{ nodeData.metadata.namespace }}</v-card-subtitle>
@@ -23,37 +23,28 @@
           <v-list-item title="UID" :subtitle="nodeData.metadata.uid"></v-list-item>
           <v-list-item
             title="Created At"
-            :subtitle="nodeData.metadata.creation_timestamp"
+            :subtitle="nodeData.metadata.creationTimestamp"
           ></v-list-item>
           <v-list-item title="Labels">
             <template v-slot:subtitle>
               <resource-label-chips
                 :labels-object="nodeData.metadata.labels"
               ></resource-label-chips>
-              <!-- <div class="mt-1">
-                <v-chip
-                  v-for="(val, key) in nodeData.metadata.labels"
-                  :key="key"
-                  size="x-small"
-                  class="mr-1"
-                >
-                  {{ key }}: {{ val }}
-                </v-chip>
-              </div> -->
             </template>
           </v-list-item>
         </v-list>
       </v-window-item>
       <!-- Images window -->
       <v-window-item value="images">
-        <v-list lines="two" comfortable v-if="nodeData?.status && nodeData?.status?.images.length">
+        <v-data-table density="compact" :items="nodeImages" items-per-page="5"></v-data-table>
+        <!--  <v-list lines="two" comfortable v-if="nodeData?.status && nodeData?.status?.images.length">
           <v-list-item v-for="(image, idx) in nodeData.status.images" :key="'idx' + idx">
             {{ image?.names ? image?.names[0] : 'Image ' + idx }}
             <v-list-item-subtitle>{{
-              `Size: ${Math.round(image?.size_bytes / (1024 * 1024))} MB`
+              `Size: ${Math.round(image?.sizeBytes / (1024 * 1024))} MB`
             }}</v-list-item-subtitle>
           </v-list-item>
-        </v-list>
+        </v-list> -->
       </v-window-item>
       <!-- Conditions window -->
       <v-window-item value="conditions">
@@ -97,5 +88,14 @@ const nodeStatus = computed(() => {
   const conditions = props.nodeData.status?.conditions || []
   const readyCondition = conditions.find((c) => c.type === 'Ready')
   return readyCondition?.status === 'True' ? 'Running' : 'Pending'
+})
+
+const nodeImages = computed(() => {
+  if (!props.nodeData?.status?.images) return []
+
+  return props.nodeData.status.images.map((image) => ({
+    name: image?.names ? image.names[0] : 'unknown',
+    imageSize: Math.round(image?.sizeBytes / (1024 * 1024)) + ' MB',
+  }))
 })
 </script>

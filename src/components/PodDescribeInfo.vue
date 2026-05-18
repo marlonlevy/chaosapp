@@ -54,7 +54,7 @@
       <v-window-item value="containers">
         <v-list density="compact">
           <v-list-item
-            v-for="container in podData.status.container_statuses"
+            v-for="container in podData.status.containerStatuses"
             :key="container.name"
             :title="container.name"
             :subtitle="container.image"
@@ -65,7 +65,7 @@
             <template v-slot:append>
               <v-badge
                 color="grey"
-                :content="`Restarts: ${container.restart_count}`"
+                :content="`Restarts: ${container.restartCount}`"
                 inline
               ></v-badge>
             </template>
