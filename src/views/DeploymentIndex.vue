@@ -58,7 +58,7 @@ const { getDeployments } = storeToRefs(resourceStore)
 const showDescribeDialog = ref(false)
 const nameOfSelectedDeployment = ref('')
 const describeData = ref('')
-const showConfirmationDialog = ref(true)
+const showConfirmationDialog = ref(false)
 
 const deploymentHeaders = [
   { title: 'Name', value: 'name' },
